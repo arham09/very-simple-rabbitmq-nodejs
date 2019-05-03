@@ -1,19 +1,13 @@
 const amqp = require('amqplib/callback_api')
 const express = require('express')
+const broker = require('./broker')
 
 const app = express()
 const port = 2009
+const queue = 'FirstQueue'
 
-amqp.connect('amqp://localhost', (err, conn) => {
-  conn.createChannel((err, channel) => {
-    let queue = 'FirstQueue'
-
-    channel.assertQueue(queue, { durable: false })
-    console.log(`Waiting for message from ${queue}`)
-    channel.consume(queue, (message) => {
-      console.log(`Received ${message.content}`)
-    }, { noAck: true })
-  })
+broker.consumer(queue, (message, err) => {
+  console.log(JSON.parse(message.content))
 })
 
 app.listen(port, () => {
