@@ -7,7 +7,7 @@ const port = 2008
 amqp.connect('amqp://localhost', (err, conn) => {
   conn.createChannel((err, channel) => {
     let queue = 'FirstQueue'
-    let message = { id: 1, content: 'Hello Rabbit' }
+    let message = { id: 1, content: 'Hello Rabbit', date: new Date() }
 
     channel.assertQueue(queue, { durable: false })
     channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)))
